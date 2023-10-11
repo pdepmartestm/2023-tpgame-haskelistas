@@ -11,17 +11,31 @@ object juego {
 	}
 	
 	method iniciarConfiguracionesBasicas() {
-		self.crearPantalla()
-		self.crearEventos()
-		self.configurarTeclas()
-		self.crearElementos()
-	}
-	
-	method crearPantalla() {
-		game.height(20)
-		game.width(20)
+		game.height(10)
+		game.width(10)
 		game.cellSize(70)
 		game.title("Defend The Nexus")
+		game.addVisual(haskelistas)
+		game.schedule(4000, {self.pantallaDeInstrucciones()})
+		game.schedule(10000, {self.pantallaDeInicio()})
+	}
+	
+	method pantallaDeInstrucciones() {
+		game.removeVisual(haskelistas)
+		game.addVisual(pantallaDeInstrucciones)
+	}
+	
+	method pantallaDeInicio() {
+		game.removeVisual(pantallaDeInstrucciones)
+		game.addVisual(pantallaDeInicio)
+		keyboard.enter().onPressDo{self.iniciarJuego()}	
+	}
+	
+	method iniciarJuego() {
+		game.clear()
+		self.configurarTeclas()
+		self.crearElementos()
+		self.crearEventos()
 	}
 	
 	method configurarTeclas() {
@@ -38,12 +52,15 @@ object juego {
 	
 	method crearEventos() {
 		game.onTick(5000, "Crear un enemigo", {oleada.crearEnemigos()})
-		game.onTick(1000, "Dispara un Nexus", {nexus.disparar()})
+		game.onTick(1000, "Dispara el nexus", {nexus.disparar()})
 	}
 }
 
-
-// En proceso de creacion -> Pantalla de inicio
-object pantallaDeInicio {
-	
+class Pantalla {
+	const property position = game.at(0,0)
+	var property image 
 }
+
+const pantallaDeInicio = new Pantalla(image = "pantallaDeInicio.png")
+const pantallaDeInstrucciones = new Pantalla(image = "pantallaDeInstrucciones.png")
+const haskelistas = new Pantalla(image = "haskelistas.png")

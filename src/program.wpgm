@@ -3,3 +3,19 @@ import juego.*
 program defendTheNexus {
 	juego.iniciar()
 }
+
+/* 
+
+- hacer que el personaje no pueda salir del marco
+guardar posicion anterior del personaje y monstruos para que al chocar con marco tenemos un methodo que hace self y redefine la posicion a la anterior para cada personaje/monstruo
+- hacer que el pers no pueda chocarse con piedras
+- si disparo choca con roca desaparece
+*  personaje choca con disparo no pasa nada
+* collaide entre monstruo y disparo
+* configurar drops
+
+
+- visuales
+- ver que onda con el nexo que dispara
+  
+ */

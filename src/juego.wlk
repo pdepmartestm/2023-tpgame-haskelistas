@@ -11,8 +11,8 @@ object juego {
 	}
 	
 	method iniciarConfiguracionesBasicas() {
-		game.height(10)
-		game.width(10)
+		game.height(11)
+		game.width(11)
 		game.cellSize(70)
 		game.title("Defend The Nexus")
 		game.addVisual(pantallaDePresentacion)

@@ -1,8 +1,15 @@
 import wollok.game.*
 
+class ObjetoNoVisual {
+	var property position
+}
+
+
+
 class ObjetoVisual {
 	var property position 
 	var property image
+	var lastPosition = position
 	
 	method crearObjeto() {
 		game.addVisual(self)
@@ -14,35 +21,46 @@ class ObjetoVisual {
 			position.y() + (unaDireccion.y()- position.y())/2
 		)
 	}
+	
+    method choco() {
+    	// el jugador contra que choco? 
+    	position = lastPosition
+    }
 }
 
 // Jugador:
 object jugador inherits ObjetoVisual(image = "playerAbajo.png", position = game.at(2,3)) {
-
+	
+	
     method derecha() {
+    	lastPosition = position
         position = position.right(1)
         image= "playerDerecha.png"
     }
     
     method izquierda() {
+    	lastPosition = position
         position = position.left(1)
         image = "playerIzquierda.png"
     }
     
     method arriba() {
+    	lastPosition = position
         position = position.up(1)
         image = "playerArriba.png"
     }
     
     method abajo() {
+    	lastPosition = position
     	position = position.down(1)
     	image = "playerAbajo.png"
     }
+    
    	
    	method recibirAtaque(unAtaque) {}
 }
 
-// Nexus: 
+// Torreta: 
 object nexus inherits ObjetoVisual(image = "player.png", position = game.center()) {
 	var nroBala = 0
 	

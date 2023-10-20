@@ -5,8 +5,10 @@ import wollok.game.*
 class Enemigo inherits ObjetoVisual{
 	var vida
 	var velocidad
+	
 
 	method irAlNexus() {
+		lastPosition = position
 		game.onTick(1000 * velocidad, "Moverse al Nexus", {self.moverseA(nexus.position())})
 	}
 	
@@ -25,6 +27,8 @@ class Enemigo inherits ObjetoVisual{
 			oleada.liberarEnemigo()
 		}
 	}
+	
+
 	
 	method recibirDanio() {}
 }

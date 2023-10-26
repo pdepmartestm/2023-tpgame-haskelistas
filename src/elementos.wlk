@@ -26,34 +26,58 @@ class ObjetoVisual {
     	// el jugador contra que choco? 
     	position = lastPosition
     }
+    
+    
 }
 
 // Jugador:
 object jugador inherits ObjetoVisual(image = "playerAbajo.png", position = game.at(2,3)) {
 	
+	const limiteDerecha = 9
+	const limiteIzquierda = 0
+	const limiteArriba = 9
+	const limiteAbajo = 0
 	
     method derecha() {
     	lastPosition = position
         position = position.right(1)
         image= "playerDerecha.png"
+        self.fueraDeMarcoHorizontal()
     }
     
     method izquierda() {
     	lastPosition = position
         position = position.left(1)
         image = "playerIzquierda.png"
+        self.fueraDeMarcoHorizontal()
     }
     
     method arriba() {
     	lastPosition = position
         position = position.up(1)
         image = "playerArriba.png"
+        self.fueraDeMarcoVertical()
     }
     
     method abajo() {
     	lastPosition = position
     	position = position.down(1)
     	image = "playerAbajo.png"
+    	self.fueraDeMarcoVertical()
+    }
+    
+    method fueraDeMarcoHorizontal() {
+    	// chequeo horizontal
+    	if (position.x() < limiteIzquierda || position.x() > limiteDerecha) {
+    		position = lastPosition
+    	}
+    }
+    
+    method fueraDeMarcoVertical() {
+    	// chequeo vertical
+    	if (position.y() > limiteArriba || position.y() < limiteAbajo) {
+    		position = lastPosition
+    	}
     }
     
    	
@@ -67,11 +91,12 @@ object nexus inherits ObjetoVisual(image = "player.png", position = game.center(
 	method disparar() {
         nroBala = nroBala + 1
         const bala = new Proyectil(nro = nroBala)
+        
         game.addVisual(bala)
         bala.empezarAMoverse() 
     }
    
-   	method recibirAtaque(unAtaque) {} 
+
 }
 
 // Pantallas:
@@ -104,4 +129,6 @@ class Proyectil inherits ObjetoVisual(image = "bullet6.png", position = nexus.po
      }
      
      method recibirAtaque(unAtaque) {}
+     
+
 }

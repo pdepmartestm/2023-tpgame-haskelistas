@@ -27,8 +27,4 @@ class Enemigo inherits ObjetoVisual{
 			oleada.liberarEnemigo()
 		}
 	}
-	
-
-	
-	method recibirDanio() {}
 }

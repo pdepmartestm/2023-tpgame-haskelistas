@@ -1,58 +1,30 @@
-import oleadas.*
 import elementos.*
-import escenario.*
+import oleadas.*
 import wollok.game.*
 
-object juego {
+class Enemigo inherits ObjetoVisual{
+	var vida
+	var velocidad
 	
-	method iniciar() {
-		self.iniciarConfiguracionesBasicas()
-		game.start()
+
+	method irAlNexus() {
+		lastPosition = position
+		game.onTick(1000 * velocidad, "Moverse al Nexus", {self.moverseA(nexus.position())})
 	}
 	
-	method iniciarConfiguracionesBasicas() {
-		game.height(10)
-		game.width(10)
-		game.cellSize(70)
-		game.title("Defend The Nexus")
-		game.addVisual(pantallaDePresentacion)
-		game.schedule(4000, {self.iniciarPantallaDeInstrucciones()})
-		game.schedule(10000, {self.iniciarPantallaDeInicio()})
+	method colisionarConAlgunElemento() {
+		game.whenCollideDo(self, {unElemento => unElemento.recibirAtaque(0)})
 	}
 	
-	method iniciarPantallaDeInstrucciones() {
-		game.removeVisual(pantallaDePresentacion)
-		game.addVisual(pantallaDeInstrucciones)
+	method perderVida(unDanio) {
+		vida -= unDanio
 	}
 	
-	method iniciarPantallaDeInicio() {
-		game.removeVisual(pantallaDeInstrucciones)
-		game.addVisual(pantallaDeInicio)
-		keyboard.enter().onPressDo{self.iniciarJuego()}	
-	}
-	
-	method iniciarJuego() {
-		game.clear()
-		escenario.crearFondo()
-		self.crearElementos()
-		self.configurarTeclas()
-		self.crearEventos()
-	}
-	
-	method configurarTeclas() {
-		keyboard.up().onPressDo{jugador.arriba()}
-		keyboard.down().onPressDo{jugador.abajo()}
-		keyboard.left().onPressDo{jugador.izquierda()}
-		keyboard.right().onPressDo{jugador.derecha()}
-	}
-	
-	method crearElementos() {
-		jugador.crearObjeto()
-		nexus.crearObjeto()
-	}
-	
-	method crearEventos() {
-		game.onTick(5000, "Crear un enemigo", {oleada.crearEnemigos()})
-		game.onTick(1000, "Dispara el nexus", {nexus.disparar()})
+	method recibirAtaque(unAtaque) {
+		self.perderVida(unAtaque)
+		if(vida < 0) {
+			game.removeVisual(self)
+			oleada.liberarEnemigo()
+		}
 	}
 }

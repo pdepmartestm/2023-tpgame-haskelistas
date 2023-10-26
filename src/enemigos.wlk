@@ -1,59 +1,58 @@
-import wollok.game.*
+import oleadas.*
 import elementos.*
+import escenario.*
+import wollok.game.*
 
-object escenario {
-	var posicionesReservadas = [game.at(2,3), game.center()]
-	var cantidadDePiedras = 0
-	var cantCeldas = 11
-
-	method crearFondo() {
-		cantCeldas.times({unaPosicionEnX => 
-			cantCeldas.times({unaPosicionEnY => 
-				const pastoActual = new ObjetoVisual(
-					image = "grass.png",
-					position = game.at(unaPosicionEnX - 1, unaPosicionEnY - 1)
-				)
-				pastoActual.crearObjeto()
-			})
-		})
-		
-		self.crearPiedras()
+object juego {
+	
+	method iniciar() {
+		self.iniciarConfiguracionesBasicas()
+		game.start()
 	}
 	
-
-	
-	// Se puede generar de manera aletoria!
-	method crearPiedras() {
-		if(cantidadDePiedras < 5) {
-			self.colocarPiedraAletoriamente()
-			self.crearPiedras()
-		}
+	method iniciarConfiguracionesBasicas() {
+		game.height(10)
+		game.width(10)
+		game.cellSize(70)
+		game.title("Defend The Nexus")
+		game.addVisual(pantallaDePresentacion)
+		game.schedule(4000, {self.iniciarPantallaDeInstrucciones()})
+		game.schedule(10000, {self.iniciarPantallaDeInicio()})
 	}
 	
-	method colocarPiedraAletoriamente() {
-		const positionAletoria = game.at(
-			new Range(start = 1, end = 11).anyOne() - 1,
-			new Range(start = 1, end = 11).anyOne() - 1
-		)
-		
-		if(!self.estaEnUnPosicionReservada(positionAletoria)) {
-			const piedraNueva = new ObjetoVisual(
-				image = "rock.png",
-				position = positionAletoria
-			)
-			
-			cantidadDePiedras += 1
-			piedraNueva.crearObjeto()
-			self.agregarPosicionReservada(positionAletoria)
-			game.onCollideDo(piedraNueva, {elemento => elemento.choco()})
-		}
+	method iniciarPantallaDeInstrucciones() {
+		game.removeVisual(pantallaDePresentacion)
+		game.addVisual(pantallaDeInstrucciones)
 	}
 	
-	method estaEnUnPosicionReservada(unaPosicion) {
-		return posicionesReservadas.contains(unaPosicion)
+	method iniciarPantallaDeInicio() {
+		game.removeVisual(pantallaDeInstrucciones)
+		game.addVisual(pantallaDeInicio)
+		keyboard.enter().onPressDo{self.iniciarJuego()}	
 	}
 	
-	method agregarPosicionReservada(unaPosicion) {
-		posicionesReservadas.add(unaPosicion)
+	method iniciarJuego() {
+		game.clear()
+		escenario.crearFondo()
+		self.crearElementos()
+		self.configurarTeclas()
+		self.crearEventos()
+	}
+	
+	method configurarTeclas() {
+		keyboard.up().onPressDo{jugador.arriba()}
+		keyboard.down().onPressDo{jugador.abajo()}
+		keyboard.left().onPressDo{jugador.izquierda()}
+		keyboard.right().onPressDo{jugador.derecha()}
+	}
+	
+	method crearElementos() {
+		jugador.crearObjeto()
+		nexus.crearObjeto()
+	}
+	
+	method crearEventos() {
+		game.onTick(5000, "Crear un enemigo", {oleada.crearEnemigos()})
+		game.onTick(1000, "Dispara el nexus", {nexus.disparar()})
 	}
 }

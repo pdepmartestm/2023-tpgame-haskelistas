@@ -20,31 +20,7 @@ object escenario {
 		self.crearPiedras()
 	}
 	
-	method crearMarco() {
-		cantCeldas.times({posicionEnX =>
-			const celdaMarco1 = new ObjetoNoVisual(
-				position = game.at(posicionEnX - 1, 0)
-				
-			)
-			const celdaMarco2 = new ObjetoNoVisual(
-				position = game.at(posicionEnX - 1, 10)
-			)
-			const celdaMarco3 = new ObjetoNoVisual(
-				position = game.at(0, posicionEnX - 1)
-			)
-			const celdaMarco4 = new ObjetoNoVisual(
-				position = game.at(10, posicionEnX - 1)
-			)
-			celdaMarco1.crearObjeto()
-			celdaMarco2.crearObjeto()
-			celdaMarco3.crearObjeto()
-			celdaMarco4.crearObjeto()
-			game.onCollideDo(celdaMarco1, {elemento => elemento.choco()})
-			game.onCollideDo(celdaMarco2, {elemento => elemento.choco()})
-			game.onCollideDo(celdaMarco3, {elemento => elemento.choco()})
-			game.onCollideDo(celdaMarco4, {elemento => elemento.choco()})
-		})
-	}
+
 	
 	// Se puede generar de manera aletoria!
 	method crearPiedras() {
@@ -65,6 +41,7 @@ object escenario {
 				image = "rock.png",
 				position = positionAletoria
 			)
+			
 			cantidadDePiedras += 1
 			piedraNueva.crearObjeto()
 			self.agregarPosicionReservada(positionAletoria)

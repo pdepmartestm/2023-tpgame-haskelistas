@@ -11,8 +11,8 @@ object juego {
 	}
 	
 	method iniciarConfiguracionesBasicas() {
-		game.height(11)
-		game.width(11)
+		game.height(10)
+		game.width(10)
 		game.cellSize(70)
 		game.title("Defend The Nexus")
 		game.addVisual(pantallaDePresentacion)
@@ -53,6 +53,6 @@ object juego {
 	
 	method crearEventos() {
 		game.onTick(5000, "Crear un enemigo", {oleada.crearEnemigos()})
-		// game.onTick(1000, "Dispara el nexus", {nexus.disparar()})
+		game.onTick(1000, "Dispara el nexus", {nexus.disparar()})
 	}
 }

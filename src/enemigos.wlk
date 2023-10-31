@@ -1,5 +1,6 @@
 import elementos.*
 import oleadas.*
+import movimientos.*
 import wollok.game.*
 
 class Enemigo inherits ObjetoVisual(image = "slimeAbajo.png") {

@@ -60,7 +60,7 @@ object escenario {
 	}
 	
 	method gameOver() {
-		barraDeVidasAColocar.all({unaBarraVida => unaBarraVida.estadoDeVida()})
+		barraDeVidasAColocar.all({unaBarraVida => !unaBarraVida.estadoDeVida()})
 	}
 
 }

@@ -1,134 +1,75 @@
 import wollok.game.*
+import movimientos.*
 
-class ObjetoNoVisual {
-	var property position
-}
-
-
-
-class ObjetoVisual {
-	var property position 
-	var property image
-	var lastPosition = position
+class Objeto {
 	
 	method crearObjeto() {
 		game.addVisual(self)
 	}
 	
-	method moverseA(unaDireccion) {
-		position = game.at(
-			position.x() + (unaDireccion.x()-position.x())/2,
-			position.y() + (unaDireccion.y()- position.y())/2
-		)
+	method sePuedePisar() = null
+}
+
+class ObjetoVisual inherits Objeto {
+	var property position 
+	var property image
+	
+	override method sePuedePisar() = true
+	
+	method mirarHaciaUnaDireccion(unIdentificador, unaDireccion) {
+		image = unIdentificador + unaDireccion + ".png"
+	}	
+}
+
+class ObjetoNoVisual inherits Objeto {
+	var property position
+	
+	override method sePuedePisar() = false
+}
+
+class Roca inherits ObjetoVisual{ 
+	override method image() = "rock.png"
+}
+
+class Nexus inherits ObjetoVisual {
+	var barraDeVida
+	
+   	method colisionarCon() {
+   		barraDeVida.actualizarCorazones()
+   	} 
+}
+
+class BarraDeVida inherits ObjetoVisual {
+	var siguienteEstado = 2
+	var property estadoDeVida = true
+	
+	method actualizarCorazones() {
+		if(siguienteEstado <= 6) 
+		{
+			image = "corazones" + siguienteEstado + ".png"
+			siguienteEstado++
+		}
+		else
+		{
+			image = "corazones7.png"
+			estadoDeVida = false
+		}	
 	}
-	
-    method choco() {
-    	// el jugador contra que choco? 
-    	position = lastPosition
-    }
-    
-    
 }
 
-// Jugador:
-object jugador inherits ObjetoVisual(image = "playerAbajo.png", position = game.at(2,3)) {
-	
-	const limiteDerecha = 9
-	const limiteIzquierda = 0
-	const limiteArriba = 9
-	const limiteAbajo = 0
-	
-    method derecha() {
-    	lastPosition = position
-        position = position.right(1)
-        image= "playerDerecha.png"
-        self.fueraDeMarcoHorizontal()
-    }
-    
-    method izquierda() {
-    	lastPosition = position
-        position = position.left(1)
-        image = "playerIzquierda.png"
-        self.fueraDeMarcoHorizontal()
-    }
-    
-    method arriba() {
-    	lastPosition = position
-        position = position.up(1)
-        image = "playerArriba.png"
-        self.fueraDeMarcoVertical()
-    }
-    
-    method abajo() {
-    	lastPosition = position
-    	position = position.down(1)
-    	image = "playerAbajo.png"
-    	self.fueraDeMarcoVertical()
-    }
-    
-    method fueraDeMarcoHorizontal() {
-    	// chequeo horizontal
-    	if (position.x() < limiteIzquierda || position.x() > limiteDerecha) {
-    		position = lastPosition
-    	}
-    }
-    
-    method fueraDeMarcoVertical() {
-    	// chequeo vertical
-    	if (position.y() > limiteArriba || position.y() < limiteAbajo) {
-    		position = lastPosition
-    	}
-    }
-    
-   	
-   	method recibirAtaque(unAtaque) {}
-}
+// Barras de vidas:
+const barraDeVida1 = new BarraDeVida(image = "corazones1.png", position = game.at(0,0))
+const barraDeVida2 = new BarraDeVida(image = "corazones1.png", position = game.at(3,0))
+const barraDeVida3 = new BarraDeVida(image = "corazones1.png", position = game.at(6,0))
+const barraDeVida4 = new BarraDeVida(image = "corazones1.png", position = game.at(9,0))
 
-// Torreta: 
-object nexus inherits ObjetoVisual(image = "player.png", position = game.center()) {
-	var nroBala = 0
-	
-	method disparar() {
-        nroBala = nroBala + 1
-        const bala = new Proyectil(nro = nroBala)
-        
-        game.addVisual(bala)
-        bala.empezarAMoverse() 
-    }
-   
-
-}
+// Nexus:
+const nexus1 = new Nexus(image = "nexus1.png", position = game.at(0,1), barraDeVida = barraDeVida1)
+const nexus2 = new Nexus(image = "nexus2.png", position = game.at(10,1), barraDeVida = barraDeVida2)
+const nexus3 = new Nexus(image = "nexus3.png", position = game.at(10,9), barraDeVida = barraDeVida3)
+const nexus4 = new Nexus(image = "nexus4.png", position = game.at(0,9), barraDeVida = barraDeVida4)
 
 // Pantallas:
 const pantallaDeInicio = new ObjetoVisual(image = "pantallaDeInicio.png", position = game.at(0,0))
 const pantallaDeInstrucciones = new ObjetoVisual(image = "pantallaDeInstrucciones.png", position = game.at(0,0))
 const pantallaDePresentacion = new ObjetoVisual(image = "pantallaDePresentacion.png", position = game.at(0,0))
-
-
-// Proyectil:
-class Proyectil inherits ObjetoVisual(image = "bullet6.png", position = nexus.position().left(1)) {
-    const danioDeBala = 20
-    var nro
-    
-    method moverse() {
-        position = position.left(1)
-        if(position.y() > game.height())
-            self.sacar()
-    }
-
-    method empezarAMoverse() {
-        game.onTick(100,"MoverBala" + nro,{self.moverse()})
-        game.whenCollideDo(self, {unEnemigo => unEnemigo.recibirAtaque(danioDeBala) 
-        	self.sacar()
-        })
-    }
-    
-     method sacar(){
-         game.removeTickEvent("MoverBala" + nro)
-         game.removeVisual(self)
-     }
-     
-     method recibirAtaque(unAtaque) {}
-     
-
-}

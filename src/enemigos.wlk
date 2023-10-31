@@ -12,19 +12,9 @@ class Enemigo inherits ObjetoVisual{
 		game.onTick(1000 * velocidad, "Moverse al Nexus", {self.moverseA(nexus.position())})
 	}
 	
-	method colisionarConAlgunElemento() {
-		game.whenCollideDo(self, {unElemento => unElemento.recibirAtaque(0)})
-	}
-	
-	method perderVida(unDanio) {
-		vida -= unDanio
-	}
-	
-	method recibirAtaque(unAtaque) {
-		self.perderVida(unAtaque)
-		if(vida < 0) {
-			game.removeVisual(self)
-			oleada.liberarEnemigo()
-		}
-	}
+	method colisionarCon() {
+        game.removeTickEvent("Moverse al Nexus " + identificadorDeTick)
+        game.removeVisual(self)
+        oleada.liberarEnemigo()
+    }
 }

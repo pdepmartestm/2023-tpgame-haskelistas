@@ -1,9 +1,12 @@
 import oleadas.*
 import elementos.*
 import escenario.*
+import movimientos.*
+import jugador.*
 import wollok.game.*
 
 object juego {
+	var velocidadDeCreacion = 1000
 	
 	method iniciar() {
 		self.iniciarConfiguracionesBasicas()
@@ -12,8 +15,9 @@ object juego {
 	
 	method iniciarConfiguracionesBasicas() {
 		game.height(10)
-		game.width(10)
+		game.width(11)
 		game.cellSize(70)
+		game.boardGround("fondo.png")
 		game.title("Defend The Nexus")
 		game.addVisual(pantallaDePresentacion)
 		game.schedule(4000, {self.iniciarPantallaDeInstrucciones()})
@@ -33,26 +37,39 @@ object juego {
 	
 	method iniciarJuego() {
 		game.clear()
-		escenario.crearFondo()
-		self.crearElementos()
+		escenario.colocarElementos()
+		escenario.crearMarcoSolido()
 		self.configurarTeclas()
+		self.crearColisiones()
 		self.crearEventos()
 	}
 	
 	method configurarTeclas() {
-		keyboard.up().onPressDo{jugador.arriba()}
-		keyboard.down().onPressDo{jugador.abajo()}
-		keyboard.left().onPressDo{jugador.izquierda()}
-		keyboard.right().onPressDo{jugador.derecha()}
+		keyboard.w().onPressDo{movimiento.moverseA(arriba, jugador, movimiento.puedeMoverseJugador())}
+		keyboard.s().onPressDo{movimiento.moverseA(abajo, jugador, movimiento.puedeMoverseJugador())}
+		keyboard.a().onPressDo{movimiento.moverseA(izquierda, jugador, movimiento.puedeMoverseJugador())}
+		keyboard.d().onPressDo{movimiento.moverseA(derecha, jugador, movimiento.puedeMoverseJugador())}
 	}
 	
-	method crearElementos() {
-		jugador.crearObjeto()
-		nexus.crearObjeto()
+	method crearColisiones() {
+		game.onCollideDo(jugador, {unElemento => unElemento.colisionarCon()})
+		game.whenCollideDo(nexus1, {unElemento => unElemento.colisionarCon()})
+		game.whenCollideDo(nexus2, {unElemento => unElemento.colisionarCon()})
+		game.whenCollideDo(nexus3, {unElemento => unElemento.colisionarCon()})
+		game.whenCollideDo(nexus4, {unElemento => unElemento.colisionarCon()})
 	}
 	
 	method crearEventos() {
-		game.onTick(5000, "Crear un enemigo", {oleada.crearEnemigos()})
-		game.onTick(1000, "Dispara el nexus", {nexus.disparar()})
+		game.onTick(velocidadDeCreacion, "Crear un enemigo", {oleada.crearEnemigos()})
+		game.onTick(5000, "Aumentar creacion de enemigos", {self.puedoAumentar()})
+		// game.onTick(150, "Game Over", {if(escenario.gameOver()) })
+	}
+	
+	method puedoAumentar() {
+		if(velocidadDeCreacion > 100) {
+			game.removeTickEvent("Crear un enemigo")
+			velocidadDeCreacion -= 100
+			game.onTick(velocidadDeCreacion, "Crear un enemigo", {oleada.crearEnemigos()})
+		}	
 	}
 }

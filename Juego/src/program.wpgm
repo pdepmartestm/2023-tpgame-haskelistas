@@ -1,6 +1,0 @@
-import juego.*
-
-program defendTheNexus {
-	juego.iniciar()
-}
-

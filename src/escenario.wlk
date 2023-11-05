@@ -2,6 +2,7 @@ import wollok.game.*
 import jugador.*
 import nexus.*
 import elementos.*
+import datos.*
 
 object escenario {
 	const nexosDelJuego = [nexus1, nexus2, nexus3, nexus4]
@@ -22,10 +23,10 @@ object escenario {
 	}
 	
 	method crearMarcoSolido() {
-		self.dibujarMarcoHorizontal(11,0)
-		self.dibujarMarcoHorizontal(11,10)
-		self.dibujarMarcoVertical(10,-1)
-		self.dibujarMarcoVertical(11,11)
+		self.dibujarMarcoHorizontal(datosDelJuego.cantDeColumnas(),0)
+		self.dibujarMarcoHorizontal(datosDelJuego.cantDeColumnas(),datosDelJuego.cantDeFilas())
+		self.dibujarMarcoVertical(datosDelJuego.cantDeFilas(),-1)
+		self.dibujarMarcoVertical(datosDelJuego.cantDeColumnas(),datosDelJuego.cantDeColumnas())
 	}	
 	
 	method dibujarMarcoHorizontal(unaPosicion, otraPosicion) {
@@ -53,8 +54,8 @@ object escenario {
 	
 	method colocarPiedraAletoriamente() {
 		const positionAletoria = game.at(
-			new Range(start = 1, end = 11).anyOne() - 1,
-			new Range(start = 1, end = 11).anyOne() - 1
+			new Range(start = 1, end = datosDelJuego.cantDeColumnas()).anyOne() - 1,
+			new Range(start = 1, end = datosDelJuego.cantDeFilas()).anyOne() - 1
 		)
 
 		if(!self.estaEnUnPosicionReservada(positionAletoria)) {

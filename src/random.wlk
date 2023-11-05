@@ -12,7 +12,7 @@ object random {
 	const direcciones = [arriba, abajo, derecha, izquierda]
 	
 	method devolverUnaCordenadaRandom() {
-		return game.at(self.devolverUnNumeroRandom(1, 10) - 1, self.devolverUnNumeroRandom(1, 10) - 1)
+		return game.at(self.devolverUnNumeroRandom(1, datosDelJuego.cantDeFilas()) - 1, self.devolverUnNumeroRandom(1, datosDelJuego.cantDeFilas()) - 1)
 	}
 	
 	method devolverUnaPosicionDeNexusRandom() {

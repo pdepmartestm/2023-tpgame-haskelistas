@@ -1,18 +1,24 @@
 import wollok.game.*
 import jugador.*
+import nexus.*
 import elementos.*
 
 object escenario {
-	const posicionesReservadas = [game.at(10,1), game.at(0,1), game.at(0,9), game.at(10,9)]
-	const elementoExtrasAColocar = [nexus1, nexus2, nexus3, nexus4, jugador]
-	const barraDeVidasAColocar = [barraDeVida1, barraDeVida2, barraDeVida3, barraDeVida4]
-	
+	const nexosDelJuego = [nexus1, nexus2, nexus3, nexus4]
+	const barrasDeVidas = [barraDeVida1, barraDeVida2, barraDeVida3, barraDeVida4]
+	// var cantidadDePiedas = 0
+
 	method colocarElementos() {
-		self.dibujarElementos(barraDeVidasAColocar + elementoExtrasAColocar)
+		self.dibujarElementos([jugador] + nexosDelJuego + barrasDeVidas)
 	}
 	
 	method dibujarElementos(unaListaDeElementos) {
 		unaListaDeElementos.forEach({unElemento => unElemento.crearObjeto()})
+	}
+	
+	method crearColisiones() {
+		const elementosImportantes = nexosDelJuego + [jugador]
+		elementosImportantes.forEach({unElemento => game.whenCollideDo(unElemento, {otroElemento => otroElemento.colisionarCon(unElemento)})})
 	}
 	
 	method crearMarcoSolido() {
@@ -36,14 +42,32 @@ object escenario {
 		})
 	}
 	
-	method devolverPosicionRandom() {
-		const index = 0.randomUpTo(3)
-		return posicionesReservadas.get(index)
+	/* 
+	}
+	method crearPiedras() {
+		if(cantidadDePiedras < 5) {
+			self.colocarPiedraAletoriamente()
+			self.crearPiedras()
+		}
 	}
 	
-	method noEstaEnUnaPosicionReservada(unaPosicion) {
-		return !posicionesReservadas.contains(unaPosicion)
+	method colocarPiedraAletoriamente() {
+		const positionAletoria = game.at(
+			new Range(start = 1, end = 11).anyOne() - 1,
+			new Range(start = 1, end = 11).anyOne() - 1
+		)
+
+		if(!self.estaEnUnPosicionReservada(positionAletoria)) {
+			const piedraNueva = new ObjetoVisual(
+				image = "rock.png",
+				position = positionAletoria
+			)
+
+			cantidadDePiedras += 1
+			piedraNueva.crearObjeto()
+			game.onCollideDo(piedraNueva, {elemento => elemento.choco()})
 	}
+	*/
 	
 	method sePuedePisarLosElementos(unaPosicion) {
 		return game.getObjectsIn(unaPosicion).all({
@@ -58,10 +82,5 @@ object escenario {
 	method noHayElementosOHayElementosPisables(unaPosicion) {
 		return self.sePuedePisarLosElementos(unaPosicion) || self.noHayElementos(unaPosicion)
 	}
-	
-	method gameOver() {
-		barraDeVidasAColocar.all({unaBarraVida => !unaBarraVida.estadoDeVida()})
-	}
-
 }
 

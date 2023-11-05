@@ -1,44 +1,43 @@
 import enemigos.*
+import random.*
+import estadistica.*
 import escenario.*
+import datos.*
 import wollok.game.*
 
 object oleada {
-    var cantidadDeEnemigos = 0
-
-    method crearEnemigos() {
-        if(cantidadDeEnemigos < 15) {
-            const estadisticasDelEnemigoActual = self.estadisticasDelEnemigo()
-            const posEnX = estadisticasDelEnemigoActual.get(1)
-            const posEnY = estadisticasDelEnemigoActual.get(2)
-            const positionNueva = game.at(posEnX, posEnY)
-
-            if(escenario.noHayElementos(positionNueva)) {
-                const enemigoSeleccionado = new Enemigo(
-                    identificadorDeTick = cantidadDeEnemigos,
-                    posicionAMoverse = estadisticasDelEnemigoActual.get(0),
-                    position = positionNueva
-                )
-                cantidadDeEnemigos += 1
-                self.configurarEnemigo(enemigoSeleccionado)
-            }
-        }
-    }
-
-    method estadisticasDelEnemigo() {
-        const posEnX = 0.randomUpTo(9)
-        const posEnY = 0.randomUpTo(9)
-        const posicionAMoverse = escenario.devolverPosicionRandom()
-
-        return [posicionAMoverse, posEnX, posEnY]
-    }
-
-    method configurarEnemigo(unEnemigo) {
-        unEnemigo.crearObjeto()
-        unEnemigo.irAlNexus()
-        game.whenCollideDo(unEnemigo, {unElemento => unElemento.colisionarCon()})
-    }
-
-    method liberarEnemigo() {
-        cantidadDeEnemigos -= 1
-    }
+	var enemigosEnPantalla = []
+	
+	method crearEnemigos() {
+		if(enemigosEnPantalla.size() < datosDelJuego.cantidadDeEnemigos()) {
+			const estadisticasDelNuevoEnemigo = self.estadisticasDelEnemigo()
+			
+			if(escenario.noHayElementos(estadisticasDelNuevoEnemigo.position())) {
+				const nuevoEnemigo = new Enemigo(
+					position = estadisticasDelNuevoEnemigo.position(),
+					nexusAIr = estadisticasDelNuevoEnemigo.nexusAIr(),
+					identificadorDeTick = enemigosEnPantalla.size()
+				)
+				
+				enemigosEnPantalla.add(nuevoEnemigo)
+				self.configurarEnemigo(nuevoEnemigo)
+			}
+		}
+	}
+	
+	method estadisticasDelEnemigo() {
+		return new Estadistica(position = random.devolverUnaCordenadaRandom(), 
+			nexusAIr = random.devolverUnaPosicionDeNexusRandom()
+		)
+	}
+	
+	method configurarEnemigo(unEnemigo) {
+		unEnemigo.crearObjeto()
+		unEnemigo.irAlNexus()
+		game.whenCollideDo(unEnemigo, {unElemento => unElemento.colisionarCon(unEnemigo)})
+	}
+	
+	method liberarEnemigo(unEnemigo) {
+		enemigosEnPantalla.remove(unEnemigo)
+	}
 }

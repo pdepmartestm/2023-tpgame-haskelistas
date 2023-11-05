@@ -1,37 +1,26 @@
 import escenario.*
+import random.*
 
 object movimiento {
-	const direcciones = [arriba, abajo, izquierda, derecha] 
 	
-	method moverseA(unaDireccion, unElemento, unCriterio) {
+	method moverseA(unaDireccion, unElemento) {
 		const unaPosicion = unaDireccion.siguiente(unElemento.position())
-		unElemento.mirarHaciaUnaDireccion(unElemento.identificador(), unaDireccion.nombre())
+		unElemento.verHaciaUnaDireccion(unElemento.identificador(), unaDireccion.nombre())
 		
-		if(unCriterio.apply(unaPosicion)) 
+		if(self.puedeMoverse(unaPosicion)) 
 			unElemento.position(unaPosicion)
 	}
-	
-	method puedeMoverseJugador() {
-		 return {unaPosicion => escenario.noEstaEnUnaPosicionReservada(unaPosicion)  
-		 	&& escenario.noHayElementosOHayElementosPisables(unaPosicion)
-		 }
-	}
-	
-	method puedeMoverseEnemigo() {
-		return {unaPosicion => escenario.noHayElementosOHayElementosPisables(unaPosicion)}
-	}
-	
+		
 	method moverseAUnaPosicion(unaPosicion, unElemento) {
-		const direccionAMoverse = self.direccionRandom()
+		const direccionAMoverse = random.devolverUnaDireccionRandom()
 		const posicionNueva = direccionAMoverse.siguiente(unElemento.position())
 		
-		if(posicionNueva.distance(unaPosicion) <= unElemento.position().distance(unaPosicion))
-			self.moverseA(direccionAMoverse, unElemento, self.puedeMoverseEnemigo())
+		if(posicionNueva.distance(unaPosicion) <= unElemento.position().distance(unaPosicion)) 
+			self.moverseA(direccionAMoverse, unElemento)
 	}
 	
-	method direccionRandom() {
-		const index = 0.randomUpTo(3)
-		return direcciones.get(index)
+	method puedeMoverse(unaPosicion) {
+		 return escenario.noHayElementosOHayElementosPisables(unaPosicion)
 	}
 }
 
@@ -58,5 +47,3 @@ object derecha {
 	method siguiente (position) = position.right(1)
 	method opuesto() = izquierda
 }
-
-

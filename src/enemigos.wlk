@@ -1,20 +1,22 @@
 import elementos.*
+import datos.*
 import oleadas.*
 import movimientos.*
 import wollok.game.*
 
-class Enemigo inherits ObjetoVisual(image = "slimeAbajo.png") {
-    const identificadorDeTick
-    const posicionAMoverse
-    const property identificador = "slime"
-
-    method irAlNexus() {
-        game.onTick(250, "Moverse al Nexus " + identificadorDeTick, {movimiento.moverseAUnaPosicion(posicionAMoverse, self)})
-    }
-
-    method colisionarCon() {
-        game.removeTickEvent("Moverse al Nexus " + identificadorDeTick)
-        game.removeVisual(self)
-        oleada.liberarEnemigo()
-    }
+class Enemigo inherits ObjetoVisual(image = "slimeAbajo.png", identificador = "slime", sePuedePisar = true, esAliado = false) {
+	const identificadorDeTick
+	const nexusAIr
+		
+	method colisionarCon(unElemento) {
+		if(unElemento.esAliado()) {
+			game.removeTickEvent("Moverse al Nexus " + identificadorDeTick)
+			game.removeVisual(self)
+			oleada.liberarEnemigo(self)
+		}
+	}
+	
+	method irAlNexus() {
+		game.onTick(datosDelJuego.segundosQueSeMueveUnEnemigo(), "Moverse al Nexus " + identificadorDeTick, {movimiento.moverseAUnaPosicion(nexusAIr, self)})
+	}
 }

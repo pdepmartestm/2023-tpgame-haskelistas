@@ -25,6 +25,7 @@ object juego {
 	
 	method iniciarJuego() {
 		game.clear()
+		self.musikita()
 		escenario.colocarElementos()
 		escenario.crearMarcoSolido()
 		escenario.crearColisiones()
@@ -41,5 +42,13 @@ object juego {
 
 	method crearEventos() {
 		game.onTick(datosDelJuego.velocidadDeCreacionNormal(), "Crear un enemigo", {oleada.crearEnemigos()})
+	}
+
+	method musikita() {
+	const musica = game.sound("Adventure-Begin.mp3")
+	musica.shouldLoop(true)
+	game.schedule(500, {musica.play()})
+	keyboard.p().onPressDo({musica.pause()})
+	keyboard.r().onPressDo({musica.resume()})
 	}
 }

@@ -11,7 +11,7 @@ class Nexus inherits ObjetoVisual(sePuedePisar = true, esAliado = true) {
 		if(self.sigueConVida())
 		{
 			if(unElemento.esAliado())
-				self.curarUnCorazon()
+				game.schedule(datosDelJuego.segundosEnCurar(), {self.curarUnCorazon()})
 			else
 				self.restarVida()
 				
@@ -46,11 +46,11 @@ class Nexus inherits ObjetoVisual(sePuedePisar = true, esAliado = true) {
 	}
 
 	method sigueConVida() {
-		return estadoActual < 7
+		return estadoActual < 6
 	}
 }
 
-const nexus1 = new Nexus(image = "nexus1.png", position = datosDelJuego.posicionDelNexus1(), barraDeVida = barraDeVida1)
-const nexus2 = new Nexus(image = "nexus1.png", position = datosDelJuego.posicionDelNexus2(), barraDeVida = barraDeVida2)
-const nexus3 = new Nexus(image = "nexus1.png", position = datosDelJuego.posicionDelNexus3(), barraDeVida = barraDeVida3)
-const nexus4 = new Nexus(image = "nexus1.png", position = datosDelJuego.posicionDelNexus4(), barraDeVida = barraDeVida4)
+const nexus1 = new Nexus(image = "rana1.png", position = datosDelJuego.posicionDelNexus1(), barraDeVida = barraDeVida1)
+const nexus2 = new Nexus(image = "rana2.png", position = datosDelJuego.posicionDelNexus2(), barraDeVida = barraDeVida2)
+const nexus3 = new Nexus(image = "rana3.png", position = datosDelJuego.posicionDelNexus3(), barraDeVida = barraDeVida3)
+const nexus4 = new Nexus(image = "rana4.png", position = datosDelJuego.posicionDelNexus4(), barraDeVida = barraDeVida4)

@@ -19,7 +19,7 @@ object escenario {
 	
 	method crearColisiones() {
 		const elementosImportantes = nexosDelJuego + [jugador]
-		elementosImportantes.forEach({unElemento => game.whenCollideDo(unElemento, {otroElemento => otroElemento.colisionarCon(unElemento)})})
+		elementosImportantes.forEach({unElemento => game.onCollideDo(unElemento, {otroElemento => otroElemento.colisionarCon(unElemento)})})
 	}
 	
 	method crearMarcoSolido() {
@@ -43,32 +43,9 @@ object escenario {
 		})
 	}
 	
-	/* 
+	method gameOver() {
+		return nexosDelJuego.all({unElemento => !unElemento.sigueConVida()})
 	}
-	method crearPiedras() {
-		if(cantidadDePiedras < 5) {
-			self.colocarPiedraAletoriamente()
-			self.crearPiedras()
-		}
-	}
-	
-	method colocarPiedraAletoriamente() {
-		const positionAletoria = game.at(
-			new Range(start = 1, end = datosDelJuego.cantDeColumnas()).anyOne() - 1,
-			new Range(start = 1, end = datosDelJuego.cantDeFilas()).anyOne() - 1
-		)
-
-		if(!self.estaEnUnPosicionReservada(positionAletoria)) {
-			const piedraNueva = new ObjetoVisual(
-				image = "rock.png",
-				position = positionAletoria
-			)
-
-			cantidadDePiedras += 1
-			piedraNueva.crearObjeto()
-			game.onCollideDo(piedraNueva, {elemento => elemento.choco()})
-	}
-	*/
 	
 	method sePuedePisarLosElementos(unaPosicion) {
 		return game.getObjectsIn(unaPosicion).all({
@@ -84,4 +61,3 @@ object escenario {
 		return self.sePuedePisarLosElementos(unaPosicion) || self.noHayElementos(unaPosicion)
 	}
 }
-

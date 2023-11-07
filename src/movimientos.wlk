@@ -10,7 +10,7 @@ object movimiento {
 		if(self.puedeMoverse(unaPosicion)) 
 			unElemento.position(unaPosicion)
 	}
-		
+	
 	method moverseAUnaPosicion(unaPosicion, unElemento) {
 		const direccionAMoverse = random.devolverUnaDireccionRandom()
 		const posicionNueva = direccionAMoverse.siguiente(unElemento.position())

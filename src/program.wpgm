@@ -1,5 +1,5 @@
 import juego.*
 
-program defendTheNexus {
+program defendTheFrogs {
 	juego.iniciar()
 }

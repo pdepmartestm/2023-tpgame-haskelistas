@@ -3,9 +3,9 @@ import elementos.*
 import juego.*
 
 class Pantalla inherits ObjetoVisual(position = game.at(0,0)) {
-	const pantallaAnterior 
-	const pantallaSiguiente
-	const tiempoDeTransicion
+	const pantallaAnterior = null
+	const pantallaSiguiente = null
+	const tiempoDeTransicion = null
 	
 	method iniciarPantalla() {
 		if(pantallaAnterior != null)
@@ -23,20 +23,14 @@ class Pantalla inherits ObjetoVisual(position = game.at(0,0)) {
 	}
 }
 
-const pantallaDePresentacion = new Pantalla(image = "pantallaDePresentacion.png", 
-	pantallaAnterior = null,
-	pantallaSiguiente = pantallaDeInstrucciones,
-	tiempoDeTransicion = 4000
-)
+// Ver como hacer un tecla para reiniciar todo! 
+object pantallaDeGameOver inherits Pantalla (image = "pantallaDeGameOver.png") {
+	
+	override method iniciarPantalla() {
+		game.clear()
+		self.crearObjeto()
+	}
+}
 
-const pantallaDeInstrucciones = new Pantalla(image = "pantallaDeInstrucciones.png", 
-	pantallaAnterior = pantallaDePresentacion,
-	pantallaSiguiente = pantallaDeInicio,
-	tiempoDeTransicion = 6000
-)
-
-const pantallaDeInicio = new Pantalla(image = "pantallaDeInicio.png", 
-	pantallaAnterior = pantallaDeInstrucciones,
-	pantallaSiguiente = null,
-	tiempoDeTransicion = null
-)
+const pantallaDePresentacion = new Pantalla(image = "pantallaDePresentacion.png", pantallaSiguiente = pantallaDeInicio, tiempoDeTransicion = 6000)
+const pantallaDeInicio = new Pantalla(image = "pantallaDeInicio.png", pantallaAnterior = pantallaDePresentacion)

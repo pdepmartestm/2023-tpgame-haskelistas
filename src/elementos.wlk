@@ -30,6 +30,7 @@ class ObjetoNoVisual inherits Objeto(sePuedePisar = false) {
 }
 
 class BarraDeVida inherits ObjetoVisual(sePuedePisar = false) {
+	
 	method actualizarCorazones(unEstadoDeVida) {
 		image = "corazones" + unEstadoDeVida + ".png"
 	}

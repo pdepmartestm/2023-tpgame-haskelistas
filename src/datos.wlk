@@ -1,17 +1,19 @@
 import wollok.game.*
 
 object datosDelJuego {
-	
 	// Datos de un Enemigo:
-	const property cantidadDeEnemigos = 15	
-	const property segundosQueSeMueveUnEnemigo = 250
+	var property cantidadDeEnemigos = 15	
+	const property segundosQueSeMueveUnEnemigo = 150
 	const property velocidadDeCreacionNormal = 1000
+	const property velocidadDeCreacionExtrema = 300
+	const property cantidadDeEnemigosExtrema = 30
 	
 	// Datos de los Nexos:
 	const property posicionDelNexus1 = game.at(0,1)
 	const property posicionDelNexus2 = game.at(0,9)
 	const property posicionDelNexus3 = game.at(10,1)
 	const property posicionDelNexus4 = game.at(10,9)
+	const property segundosEnCurar = 5
 	
 	// Datos de las barras de vidas:
 	const property posicionDeBarraVida1 = game.at(0,0)
@@ -33,8 +35,15 @@ object datosDelJuego {
 	const property cantDeFilas = 10
 	const property cantDeColumnas = 11
 	const property pixelesDeCelda = 70
+	const property segundosVerificacionGameOver = 300
+	
+	// Datos de musica del juego:
 	
 	method actualizarFinDeIndex() {
 		finDeIndexDePosicionesReservadas-- 
+	}
+	
+	method aumentarCantidadDeEnemigos() {
+		cantidadDeEnemigos = self.cantidadDeEnemigosExtrema()
 	}
 }

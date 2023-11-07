@@ -1,4 +1,4 @@
-<img width="385" alt="image" src="https://github.com/pdepmartestm/2023-tpgame-haskelistas/assets/101824879/c4463bb6-bb2f-40ac-8ce0-82b40cb1632a"># Running From Nexus
+# DEFEND THE FROGS
 
 ## Equipo de desarrollo
 
